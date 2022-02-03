@@ -29,4 +29,5 @@ bool is_valid_program(
         >
     >& feed
     , State& s
+    , Term& value
 );

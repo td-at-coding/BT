@@ -456,6 +456,7 @@ bool is_valid_program(
         >
     >& feed
     , State& s
+    , Term& value
 )
 {
     using pattern::pattern;
@@ -467,6 +468,8 @@ bool is_valid_program(
     int scope = 0, fscope = 0;
     std::vector<pattern> prescope;
     State _s = s;
+    bool assignment = false;
+    std::string prev_keyword = "";
 
     for (size_t i = 0; i < feed.size(); i++)
     {
@@ -549,6 +552,8 @@ bool is_valid_program(
                     case pattern::KEYWORD5:
                     {
                         state = end;
+                        if(assignment == false)
+                            prev_keyword = feedi.first;
                         stop = true;
                         break;
                     }
@@ -586,7 +591,6 @@ bool is_valid_program(
             case cstate::SIGN3:
             case cstate::SIGNN:
             {
-                // TODO: implement END SIGNP1-2 SIGNPM SIGNE ARGBEGIN ARGEND
                 switch (end)
                 {
                 case pattern::END:
@@ -594,6 +598,7 @@ bool is_valid_program(
                     if(feedi.first == ";")
                     {
                         state = end;
+                        assignment = false;
                         stop = true;
                     }
                     break;
@@ -603,6 +608,7 @@ bool is_valid_program(
                     if(feedi.first == "=")
                     {
                         state = end;
+                        assignment = true;
                         stop = true;
                     }
                     break;
@@ -724,6 +730,7 @@ bool is_valid_program(
     
     if(state == pattern::END)
     {
+        s = _s;
         return true;
     } else 
     {
