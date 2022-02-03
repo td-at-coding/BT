@@ -17,3 +17,16 @@ bool is_valid_pattern(
     const Grammar& grammar
     , const std::vector<std::pair<std::string,cstate::cstate>>& feed
 );
+
+bool is_valid_program(
+    const Grammar& grammar
+    , const std::vector
+    <
+        std::pair
+        <
+            std::string
+            , cstate::cstate
+        >
+    >& feed
+    , State& s
+);
