@@ -1,0 +1,11 @@
+cmake_minimum_required(VERSION 3.9)
+project(BT)
+
+add_subdirectory(State)
+add_subdirectory(StateMachine)
+add_subdirectory(Expression)
+add_subdirectory(Parser)
+add_subdirectory(Compiler)
+add_subdirectory(Shell)
+add_subdirectory(Graph)
+add_subdirectory(Grammar)
