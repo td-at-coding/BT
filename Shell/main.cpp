@@ -16,7 +16,7 @@ int main()
     cout << "press q to exit" << endl;
     State state;
     Expression expr;
-    Linter lint;
+    Linter linter;
     state.insert_data("a","2", INTEGER);
     state.insert_function("five = take() return 5;");
     state.insert_function("ten = take() eight = 8; return eight + 2;");
@@ -34,7 +34,7 @@ int main()
                 system(line.c_str());
                 continue;
             }
-            else if(lint.lint_program(line) == false)
+            else if(linter.lint_program(line) == false)
             {
                 cout << "invalid syntax" << endl;
                 return 1;
