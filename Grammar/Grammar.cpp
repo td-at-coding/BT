@@ -3,7 +3,7 @@
 #include "cstate_impl.h"
 #include "util.h"
 #include "scope_state_impl.h"
-
+#include "Term.h"
 struct Grammar
 {
     StateMachine& sm = create_statemachine();
@@ -569,6 +569,15 @@ bool is_valid_program(
                 {
                     if(current_scope_state == scope_state::STRING)
                         return false;
+                    var_type t;
+                    if(!value.get_type(t))
+                        value.init(stoi(feedi.first),0);
+                    else
+                    {
+                        int val;
+                        value.get_value(val);
+                        value.init(stoi(feedi.first)+val,0);
+                    }
                     state = end;
                     stop = true;
                 }
