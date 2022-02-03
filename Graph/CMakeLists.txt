@@ -2,6 +2,7 @@ project (BT_GRAPH)
 
 include_directories(
         ${BT_STATEMACHINE_SOURCE_DIR}
+        ${BT_STATE_SOURCE_DIR}
         ${BT_EXPRESSION_SOURCE_DIR}
         ${BT_GRAMMAR_SOURCE_DIR}
 )
