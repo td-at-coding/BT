@@ -19,7 +19,6 @@ private:
 public:
     bool init(std::string str);
     bool evaluate(std::vector<Data> args, const State& state, Term& value);
-    bool evaluate(std::string& value);
     bool contains_name(std::string name) const;
     std::string get_name() const;
     std::string get_return_expression() const;

@@ -74,27 +74,21 @@ bool Function::init(std::string str)
     if (first_st.find("return") != std::string::npos) return true;
     // TODO: get statements and continue
     first_st = first_st.substr(first_st.find_first_not_of(" \t\n\r\f\v"));
-    // std::cout << "first_st : " << first_st << std::endl;
     std::string name, value;
     name = first_st.substr(0,first_st.find_first_of(" \t\n\r\f\v"));
-    // std::cout << "name : (" << name << ")"<< std::endl;
     first_st = first_st.substr(first_st.find_first_of("=")+1);
-    // std::cout << "first_st : " << first_st << std::endl;
     value = first_st.substr(first_st.find_first_not_of(" \t\n\r\f\v"));
-    // std::cout << "value : (" << value << ")"<< std::endl;
     statements.push_back({name,value,INTEGER});
     while (getline(unit, first_st,';'))
     {
         if (first_st.find("return") != std::string::npos) return true;
         first_st = first_st.substr(first_st.find_first_not_of(" \t\n\r\f\v"));
-        // std::cout << "first_st : " << first_st << std::endl;
+
         std::string name, value;
         name = first_st.substr(0,first_st.find_first_of(" \t\n\r\f\v"));
-        // std::cout << "name : (" << name << ")"<< std::endl;
         first_st = first_st.substr(first_st.find_first_of("=")+1);
-        // std::cout << "first_st : " << first_st << std::endl;
+
         value = first_st.substr(first_st.find_first_not_of(" \t\n\r\f\v"));
-        // std::cout << "value : (" << value << ")"<< std::endl;
         statements.push_back({name,value,INTEGER});
 
     }
@@ -150,52 +144,6 @@ bool Function::evaluate(std::vector<Data> args, const State& state, Term& value)
     {
         value.init("",arguments[0].get_value(),0);
     } else value.init("",return_expression,0);
-
-    return true;
-}
-
-bool Function::evaluate(std::string& value)
-{
-    if(0 != arguments.size()) return false;
-    for (size_t i = 0; i < statements.size(); i++)
-    {
-        if(statements[i].get_type() == EXPRESSION)
-        {
-            // TODO fill in variables from arguments
-        }
-    }
-    std::vector<Term> terms = get_terms(return_expression);
-    std::string ret_expr = return_expression;
-    if(ret_expr.find_first_of("+-*/") != std::string::npos){
-        int total = 0;
-        while(ret_expr.find_first_of("+-*/") != std::string::npos)
-        {
-            std::string new_value = ret_expr.substr(0, ret_expr.find_first_of(" \t\n\r\f\v+-*/"));
-            std::cout << "new value: (" << new_value << ") in? " << contains_name(new_value) << std::endl; 
-            if(contains_name(new_value))
-            {
-                int name_value;
-                get_value(new_value,name_value);
-                std::cout <<"new_value: ("<< new_value<< ") name_value: (" << name_value << ")" << std::endl;
-                total+= name_value;
-            }
-            else
-                total+= std::stoi(new_value);
-            ret_expr = ret_expr.substr(ret_expr.find_first_of("+-*/")+1);
-            ret_expr = ret_expr.substr(ret_expr.find_first_not_of(" \t\n\r\f\v"));
-        }
-        std::cout << "ret_expr (" << ret_expr << ")" << std::endl;
-        if(contains_name(ret_expr))
-        {
-            int name_value;
-            get_value(ret_expr,name_value);
-            std::cout <<"new_value: ("<< ret_expr<< ") name_value: (" << name_value << ")" << std::endl;
-            total+= name_value;
-        }
-        else
-            total+= std::stoi(ret_expr);
-        value = std::to_string(total);
-    } else value = return_expression;
 
     return true;
 }

@@ -517,9 +517,9 @@ std::vector<Term> get_terms(std::string str, State& state)
                 state.get_function(term,func);
                 if(func.get_length() == 0)
                 {
-                    std::string value;
-                    func.evaluate(value);
-                    A.init(value,INTEGER,first_letter);
+                    std::vector<Data> args;
+                    func.evaluate(args,state,A);
+                    // A.init(value,INTEGER,first_letter);
                     collection.push_back(A);
                 } else 
                 {
@@ -562,9 +562,8 @@ std::vector<Term> get_terms(std::string str, State& state)
             state.get_function(term,func);
             if(func.get_length() == 0)
             {
-                std::string value;
-                func.evaluate(value);
-                A.init(value,INTEGER,first_letter);
+                std::vector<Data> args;
+                func.evaluate(args,state,A);
                 collection.push_back(A);
             }
         } else if(string_pro == true )
