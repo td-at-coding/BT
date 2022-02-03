@@ -168,7 +168,9 @@ std::ostream& operator<<(std::ostream& out, const Grammar& grammar)
 
 bool is_valid_pattern(
     const Grammar& grammar
-    , const std::vector<std::pair<std::string,cstate::cstate>>& feed
+    , const std::vector<
+        std::pair<std::string
+        , cstate::cstate>>& feed
 )
 {
     using pattern::pattern;
@@ -179,6 +181,292 @@ bool is_valid_pattern(
     std::vector<unsigned> scopebegin, scopeend;
     int scope = 0, fscope = 0;
     std::vector<pattern> prescope;
+
+    for (size_t i = 0; i < feed.size(); i++)
+    {
+        const auto& feedi = feed[i];
+        if(state == pattern::END) {
+            if (scope != 0)
+                return false;
+            
+            scope = 0;
+            state = pattern::BEGINNING;
+            // TODO: check if there's a mismatch
+            // }}{{ --incorrect 0 -1 -2 -1 0
+            // {}}{ --incorrect 0 1 0 -1 0
+            // {}{} --correct 0 1 0 1 0 
+            // {{}} -- correct 0 1 2 1 0
+            // }}}{{{ -- incorrect 0 -1 -2 -3 -2 -1 0
+            // {}}}{{ -- incorrect 0 1 0 -1 -2 -1 0
+            // {}{}}{ -- incorrect 0 1 0 1 0 -1 0
+            // {}{}{} -- correct 0 1 0 1 0 1 0
+            
+            if(scopebegin.size() != scopeend.size())
+                return false;
+            
+            scopebegin.clear();
+            scopeend.clear();
+            prescope.clear();
+        }
+        bool stop = false;
+        if(state == pattern::CALL1 || state == pattern::SCOPEBEGIN)
+            scope++;
+        else if (state == pattern::CALL2 || state == pattern::SCOPEEND)
+            scope--;
+        
+        if(scope < 0) return false;
+
+        StateMachine& paths = get_begin(grammar.sm, state);
+        
+
+        for (size_t j = 0; j < get_size(paths); j++)
+        {
+            if(stop == true) break;
+            int k = 0;
+            pattern end = (pattern)get_end(get_node(paths,j));
+
+            if (feedi.first == "return")
+            {
+                k= 1;
+            }
+            
+            switch(feedi.second) 
+            {
+            case cstate::KEYWORD:
+            {
+                bool keyword = feedi.first == "take" || feedi.first == "return";
+                if(
+                    keyword
+                    && (
+                       end == pattern::FSCOPEBEGIN
+                    || end == pattern::FSCOPEEND
+                    )
+                )
+                {
+                    if( end == pattern::FSCOPEBEGIN)
+                        fscope++;
+                    else if (end == pattern::FSCOPEEND)
+                    {
+                        fscope--;
+                        if(fscope < 0) return 0;
+                    }
+                    state = end;
+                    stop = true;
+                } else if ( keyword == false)
+                {
+                    switch (end)
+                    {
+                    case pattern::KEYWORD1:
+                    case pattern::KEYWORD2:
+                    case pattern::KEYWORD3:
+                    case pattern::KEYWORD4:
+                    case pattern::KEYWORD5:
+                    {
+                        state = end;
+                        stop = true;
+                        break;
+                    }
+                    }
+                }
+                break;
+            }
+            case cstate::FLOAT:
+            case cstate::INTEGER:
+            {
+
+                if(end == pattern::INTEGER)
+                {
+                    if(current_scope_state == scope_state::STRING)
+                        return false;
+                    state = end;
+                    stop = true;
+                }
+                break;
+            }
+            case cstate::STRING:
+            {
+
+                if(end == pattern::STRING)
+                {
+                    if(current_scope_state == scope_state::INTEGER)
+                        return false;
+                    state = end;
+                    stop = true;
+                }
+                break;
+            }
+            case cstate::SIGN1:
+            case cstate::SIGN2:
+            case cstate::SIGN3:
+            case cstate::SIGNN:
+            {
+                // TODO: implement END SIGNP1-2 SIGNPM SIGNE ARGBEGIN ARGEND
+                switch (end)
+                {
+                case pattern::END:
+                {
+                    if(feedi.first == ";")
+                    {
+                        state = end;
+                        stop = true;
+                    }
+                    break;
+                }
+                case pattern::SIGNE:
+                {
+                    if(feedi.first == "=")
+                    {
+                        state = end;
+                        stop = true;
+                    }
+                    break;
+                }
+                case pattern::SIGN:
+                {
+                    if(is_sign(feedi.first))
+                    {
+                        state = end;
+                        stop = true;
+                    }
+                    break;
+                }
+                case pattern::SIGNP1:
+                case pattern::SIGNP2:
+                case pattern::SIGNP3:
+                {
+                    if(feedi.first == "+")
+                    {
+                        state = end;
+                        stop = true;
+                    }
+                    break;
+                }
+                case pattern::SIGNPM:
+                {
+                    if(feedi.first == "+" || feedi.first == "-")
+                    {
+                        state = end;
+                        stop = true;
+                    }
+                    break;
+                }
+                case pattern::ARGBEGIN:
+                case pattern::CALL1:
+                {
+                    if(feedi.first == "(" )
+                    {
+                        if(end == pattern::CALL1) 
+                            prescope.push_back(state);
+                        state = end;
+                        stop = true;
+                    }
+                    break;
+                }
+                case pattern::ARGEND:
+                case pattern::CALL2:
+                {
+                    if(feedi.first == ")" )
+                    {
+                        if(end == pattern::CALL2)
+                        {
+                            pattern last =prescope.back();
+                            prescope.pop_back();
+                            switch (last)
+                            {
+                            case pattern::KEYWORD2:
+                            case pattern::KEYWORD5:
+                                current_scope_state = scope_state::UNSPECIFIED;
+                                break;
+                            case pattern::KEYWORD3:
+                                current_scope_state = scope_state::STRING;
+                                break;
+                            case pattern::KEYWORD1:
+                                current_scope_state = scope_state::INTEGER;
+                                break;
+                            
+                            }
+                        }
+                        state = end;
+                        stop = true;
+                    }
+                    break;
+                }
+
+                case pattern::SCOPEBEGIN:
+                {
+                    if(feedi.first == "{" )
+                    {
+                        scopebegin.push_back(i);
+                        state = end;
+                        stop = true;
+                    }
+                    break;
+                }
+                case pattern::SCOPEEND:
+                {
+                    if(feedi.first == "}" )
+                    {
+                        scopeend.push_back(i);
+                        state = end;
+                        stop = true;
+                    }
+                    break;
+                }
+                case pattern::COMMA:
+                case pattern::COMMAC:
+                {
+                    if(feedi.first == "," )
+                    {
+                        state = end;
+                        stop = true;
+                    }
+                    break;
+                }
+                }
+                break;
+            }
+            }
+        }
+        delete_statemachine(paths);
+        if(stop == false)
+        {
+            return false;
+        }
+    }
+    if(fscope !=0)
+        return false;
+    
+    if(state == pattern::END)
+    {
+        return true;
+    } else 
+    {
+        return false;
+    }
+}
+
+bool is_valid_program(
+    const Grammar& grammar
+    , const std::vector
+    <
+        std::pair
+        <
+            std::string
+            , cstate::cstate
+        >
+    >& feed
+    , State& s
+)
+{
+    using pattern::pattern;
+    using cstate::cstate;
+    using scope_state::scope_state;
+    pattern state = pattern::BEGINNING;
+    scope_state current_scope_state = scope_state::UNSPECIFIED;
+    std::vector<unsigned> scopebegin, scopeend;
+    int scope = 0, fscope = 0;
+    std::vector<pattern> prescope;
+    State _s = s;
 
     for (size_t i = 0; i < feed.size(); i++)
     {
