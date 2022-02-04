@@ -456,7 +456,7 @@ bool is_valid_program(
         >
     >& feed
     , State& s
-    , Term& value
+    , std::vector<Term>& terms
 )
 {
     using pattern::pattern;
@@ -468,6 +468,7 @@ bool is_valid_program(
     int scope = 0, fscope = 0;
     std::vector<pattern> prescope;
     State _s = s;
+    Term value;
     bool assignment = false;
     std::string prev_keyword = "";
 
@@ -607,6 +608,8 @@ bool is_valid_program(
                     if(feedi.first == ";")
                     {
                         state = end;
+                        terms.push_back(value);
+                        value.init(0,0);
                         assignment = false;
                         stop = true;
                     }
