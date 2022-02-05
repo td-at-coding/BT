@@ -8,6 +8,7 @@
 #include "Linter.h"
 #include "Parser.h"
 #include "Term.h"
+#include <sstream>
 using namespace std;
 
 int main()
@@ -44,12 +45,14 @@ int main()
             }
             else if (parser.run_program(line,state,terms) )
             {
+                std::ostringstream ss(line);
                 for (size_t i = 0; i < terms.size(); i++)
                 {
                     Term& term = terms[i];
-                    cout << term << "; ";
+                    ss << term << "; ";
                 }
-                cout <<  endl;
+                // ss << endl;
+                line = ss.str();
                 terms.clear();
                 
             }
@@ -57,13 +60,13 @@ int main()
         catch(char const* error)
         {
             std::cerr << error << '\n';
-            cout << line << endl;
         }
         catch (std::invalid_argument const& ex)
         {
             std::cerr << "invalid argument " << ex.what() << '\n';
-            cout << line << endl;
         }
+
+        cout << line << endl;
         
     }
     return 0;
