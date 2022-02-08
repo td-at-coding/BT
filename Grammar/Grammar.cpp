@@ -575,15 +575,6 @@ bool is_valid_program(
                     Leaf& leaf = create_leaf();
                     set(leaf, feedi.first,feedi.second, scope);
                     leaves.push_back(&leaf);
-                    var_type t;
-                    if(!value.get_type(t))
-                        value.init(stoi(feedi.first),0);
-                    else
-                    {
-                        int val;
-                        value.get_value(val);
-                        value.init(stoi(feedi.first)+val,0);
-                    }
                     state = end;
                     stop = true;
                 }
@@ -596,6 +587,9 @@ bool is_valid_program(
                 {
                     if(current_scope_state == scope_state::INTEGER)
                         return false;
+                    Leaf& leaf = create_leaf();
+                    set(leaf, feedi.first,feedi.second, scope);
+                    leaves.push_back(&leaf);
                     state = end;
                     stop = true;
                 }

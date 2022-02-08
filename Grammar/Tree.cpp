@@ -156,6 +156,13 @@ bool add(Leaf& lleaf, Leaf& rleaf)
     default:
         break;
     }
+
+    if(lleaf.type == cstate::STRING && rleaf.type == cstate::STRING)
+    {
+        lleaf.value = lleaf.value.substr(0, lleaf.value.size()-1);
+        rleaf.value = rleaf.value.substr(1, rleaf.value.size()-1);
+        lleaf.value += rleaf.value;
+    }
     
     return true;
 }
