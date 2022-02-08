@@ -36,6 +36,7 @@ int main()
             if(line == "q" || line == "Q") break;
             else if (line == "clear") {
                 system(line.c_str());
+                cout << "press q to exit" << endl;
                 continue;
             }
             else if(linter.lint_program(line) == false)

@@ -7,6 +7,6 @@ include_directories(
     ${BT_STATE_SOURCE_DIR}
 )
 
-add_library (grammar SHARED Parser.cpp Linter.cpp Grammar.cpp Reader.cpp pattern.cpp mstate.cpp cstate.cpp)
+add_library (grammar SHARED Tree.cpp Parser.cpp Linter.cpp Grammar.cpp Reader.cpp pattern.cpp mstate.cpp cstate.cpp)
 
 install(TARGETS grammar )

@@ -4,6 +4,7 @@
 #include "util.h"
 #include "scope_state_impl.h"
 #include "Term.h"
+#include "Tree.h"
 struct Grammar
 {
     StateMachine& sm = create_statemachine();
@@ -471,6 +472,7 @@ bool is_valid_program(
     Term value;
     bool assignment = false;
     std::string prev_keyword = "";
+    std::vector<Leaf*> leaves;
 
     for (size_t i = 0; i < feed.size(); i++)
     {
@@ -570,6 +572,9 @@ bool is_valid_program(
                 {
                     if(current_scope_state == scope_state::STRING)
                         return false;
+                    Leaf& leaf = create_leaf();
+                    set(leaf, feedi.first,feedi.second, scope);
+                    leaves.push_back(&leaf);
                     var_type t;
                     if(!value.get_type(t))
                         value.init(stoi(feedi.first),0);
@@ -608,6 +613,17 @@ bool is_valid_program(
                     if(feedi.first == ";")
                     {
                         state = end;
+                        Leaf& result_leaf = *leaves[0];
+
+                        for (size_t i = 1; i < leaves.size(); i++)
+                        {
+                            Leaf& leaf = *leaves[i];
+                            add(result_leaf,leaf);
+                            delete_leaf(leaf);
+                        }
+                        value.init(get_value(result_leaf),0);
+                        delete_leaf(result_leaf);
+                        leaves.clear();
                         terms.push_back(value);
                         value.init(0,0);
                         assignment = false;
