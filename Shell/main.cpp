@@ -46,6 +46,7 @@ int main()
             }
             else if (parser.run_program(line,state,terms) )
             {
+                line = "";
                 std::ostringstream ss(line);
                 for (size_t i = 0; i < terms.size(); i++)
                 {
