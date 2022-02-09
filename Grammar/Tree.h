@@ -32,6 +32,12 @@ void delete_leaf(Leaf& leaf);
 
 bool add(Leaf& lleaf, Leaf& rleaf);
 
+bool sub(Leaf& lleaf, Leaf& rleaf);
+
+bool mul(Leaf& lleaf, Leaf& rleaf);
+
+bool div(Leaf& lleaf, Leaf& rleaf);
+
 
 
 

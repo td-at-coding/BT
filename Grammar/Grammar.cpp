@@ -608,11 +608,45 @@ bool is_valid_program(
                     {
                         state = end;
                         Leaf& result_leaf = *leaves[0];
-
+                        char sign = '+';
                         for (size_t i = 1; i < leaves.size(); i++)
                         {
                             Leaf& leaf = *leaves[i];
-                            add(result_leaf,leaf);
+                            switch (get_type(leaf))
+                            {
+                            case cstate::SIGN1:
+                            case cstate::SIGN2:
+                            case cstate::SIGN3:
+                            case cstate::SIGNN:
+                            {
+                                sign = get_value(leaf)[0];
+                                break;
+                            }
+                            
+                            default:
+                            {
+
+                                switch (sign)
+                                {
+                                case '+':
+                                    add(result_leaf,leaf);
+                                    break;
+                                case '-':
+                                    sub(result_leaf,leaf);
+                                    break;
+                                case '*':
+                                    mul(result_leaf,leaf);
+                                    break;
+                                case '/':
+                                    div(result_leaf,leaf);
+                                    break;
+                                
+                                default:
+                                    break;
+                                }
+                                break;
+                            }
+                            }
                             delete_leaf(leaf);
                         }
                         value.init(get_value(result_leaf),0);
@@ -639,6 +673,9 @@ bool is_valid_program(
                 {
                     if(is_sign(feedi.first))
                     {
+                        Leaf& leaf = create_leaf();
+                        set(leaf, feedi.first,feedi.second, scope);
+                        leaves.push_back(&leaf);
                         state = end;
                         stop = true;
                     }
@@ -650,6 +687,9 @@ bool is_valid_program(
                 {
                     if(feedi.first == "+")
                     {
+                        Leaf& leaf = create_leaf();
+                        set(leaf, feedi.first,feedi.second, scope);
+                        leaves.push_back(&leaf);
                         state = end;
                         stop = true;
                     }

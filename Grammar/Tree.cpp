@@ -167,6 +167,206 @@ bool add(Leaf& lleaf, Leaf& rleaf)
     return true;
 }
 
+bool sub(Leaf& lleaf, Leaf& rleaf)
+{
+    switch (lleaf.type)
+    {
+    case cstate::INTEGER:
+    {
+        switch (rleaf.type)
+        {
+        case cstate::INTEGER:
+        {
+            int value1 = std::stoi(lleaf.value),
+                value2 = std::stoi(rleaf.value);
+            lleaf.value= std::to_string(value1-value2);
+            
+            break;
+        }
+        case cstate::FLOAT:
+        {
+            int value1 = std::stoi(lleaf.value);
+            float value2 = std::stof(rleaf.value);
+            lleaf.value= std::to_string(value1-value2);
+            lleaf.type = cstate::FLOAT;
+            break;
+        }
+        
+        default:
+            break;
+        }
+        break;
+    }
+    case cstate::FLOAT:
+    {
+        switch (rleaf.type)
+        {
+        case cstate::INTEGER:
+        {
+            float value1 = std::stof(lleaf.value);
+            int value2 = std::stoi(rleaf.value);
+            lleaf.value= std::to_string(value1-value2);
+            
+            break;
+        }
+        case cstate::FLOAT:
+        {
+            float value1 = std::stof(lleaf.value); 
+            float value2 = std::stof(rleaf.value);
+            lleaf.value= std::to_string(value1-value2);
+            
+            break;
+        }
+        
+        default:
+            break;
+        }
+        break;
+    }
+    
+    default:
+        break;
+    }
+    
+    return true;
+}
+
+
+
+
+bool mul(Leaf& lleaf, Leaf& rleaf)
+{
+    switch (lleaf.type)
+    {
+    case cstate::INTEGER:
+    {
+        switch (rleaf.type)
+        {
+        case cstate::INTEGER:
+        {
+            int value1 = std::stoi(lleaf.value),
+                value2 = std::stoi(rleaf.value);
+            lleaf.value= std::to_string(value1*value2);
+            
+            break;
+        }
+        case cstate::FLOAT:
+        {
+            int value1 = std::stoi(lleaf.value);
+            float value2 = std::stof(rleaf.value);
+            lleaf.value= std::to_string(value1*value2);
+            lleaf.type = cstate::FLOAT;
+            break;
+        }
+        
+        default:
+            break;
+        }
+        break;
+    }
+    case cstate::FLOAT:
+    {
+        switch (rleaf.type)
+        {
+        case cstate::INTEGER:
+        {
+            float value1 = std::stof(lleaf.value);
+            int value2 = std::stoi(rleaf.value);
+            lleaf.value= std::to_string(value1*value2);
+            
+            break;
+        }
+        case cstate::FLOAT:
+        {
+            float value1 = std::stof(lleaf.value); 
+            float value2 = std::stof(rleaf.value);
+            lleaf.value= std::to_string(value1*value2);
+            
+            break;
+        }
+        
+        default:
+            break;
+        }
+        break;
+    }
+    
+    default:
+        break;
+    }
+    
+    return true;
+}
+
+
+
+bool div(Leaf& lleaf, Leaf& rleaf)
+{
+    switch (lleaf.type)
+    {
+    case cstate::INTEGER:
+    {
+        switch (rleaf.type)
+        {
+        case cstate::INTEGER:
+        {
+            int value1 = std::stoi(lleaf.value),
+                value2 = std::stoi(rleaf.value);
+            lleaf.value= std::to_string(value1/value2);
+            
+            break;
+        }
+        case cstate::FLOAT:
+        {
+            int value1 = std::stoi(lleaf.value);
+            float value2 = std::stof(rleaf.value);
+            lleaf.value= std::to_string(value1/value2);
+            lleaf.type = cstate::FLOAT;
+            break;
+        }
+        
+        default:
+            break;
+        }
+        break;
+    }
+    case cstate::FLOAT:
+    {
+        switch (rleaf.type)
+        {
+        case cstate::INTEGER:
+        {
+            float value1 = std::stof(lleaf.value);
+            int value2 = std::stoi(rleaf.value);
+            lleaf.value= std::to_string(value1/value2);
+            
+            break;
+        }
+        case cstate::FLOAT:
+        {
+            float value1 = std::stof(lleaf.value); 
+            float value2 = std::stof(rleaf.value);
+            lleaf.value= std::to_string(value1/value2);
+            
+            break;
+        }
+        
+        default:
+            break;
+        }
+        break;
+    }
+    
+    default:
+        break;
+    }
+    
+    return true;
+}
+
+
+
+
 
 
 
