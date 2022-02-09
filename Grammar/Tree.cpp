@@ -367,6 +367,42 @@ bool div(Leaf& lleaf, Leaf& rleaf)
 
 
 
+bool negate(Leaf& leaf)
+{
+    switch(leaf.type)
+    {
+        case cstate::INTEGER:
+        {
+            int tmp = -std::stoi(leaf.value);
+            leaf.value = std::to_string(tmp);
+            return true;
+        }
+        case cstate::FLOAT:
+        {
+            float tmp = -std::stof(leaf.value);
+            leaf.value = std::to_string(tmp);
+            return true;
+        }
+    };
+    return false;
+}
 
+bool inc(Leaf& leaf)
+{
+    leaf.scope++;
+    return true;
+}
 
+bool dec(Leaf& leaf)
+{
+    leaf.scope--;
+    return true;
+}
 
+bool set_equal(Leaf& lleaf, Leaf& rleaf)
+{
+    lleaf.value = rleaf.value;
+    lleaf.type = rleaf.type;
+    lleaf.scope = rleaf.scope;
+    return true;
+}

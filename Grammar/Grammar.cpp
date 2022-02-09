@@ -473,6 +473,7 @@ bool is_valid_program(
     bool assignment = false;
     std::string prev_keyword = "";
     std::vector<Leaf*> leaves;
+    bool signm = false, muldiv = false;
 
     for (size_t i = 0; i < feed.size(); i++)
     {
@@ -574,6 +575,11 @@ bool is_valid_program(
                         return false;
                     Leaf& leaf = create_leaf();
                     set(leaf, feedi.first,feedi.second, scope);
+                    if(signm == true)
+                    {
+                        negate(leaf);
+                        signm = false;
+                    }
                     leaves.push_back(&leaf);
                     state = end;
                     stop = true;
@@ -607,11 +613,32 @@ bool is_valid_program(
                     if(feedi.first == ";")
                     {
                         state = end;
-                        Leaf& result_leaf = *leaves[0];
-                        char sign = '+';
-                        for (size_t i = 1; i < leaves.size(); i++)
+                        if(muldiv == true)
+                        {
+                            inc(*leaves.back());
+                            muldiv = false;
+                        }
+                        int highest = 0;
+                        for (size_t i = 0; i < leaves.size(); i++)
                         {
                             Leaf& leaf = *leaves[i];
+                            auto cscope = get_scope(leaf);
+                            if(cscope > highest)
+                                highest = cscope;
+                        }
+                        
+                        std::vector<Leaf*> new_leaves;
+                        for (size_t i = 0; i < leaves.size(); i++)
+                        {
+                            Leaf& leaf = *leaves[i];
+                            if(get_scope(leaf) == highest)
+                                new_leaves.push_back(&leaf);
+                        }
+                        Leaf& result_leaf = *new_leaves[0];
+                        char sign = '+';
+                        for (size_t i = 1; i < new_leaves.size(); i++)
+                        {
+                            Leaf& leaf = *new_leaves[i];
                             switch (get_type(leaf))
                             {
                             case cstate::SIGN1:
@@ -647,10 +674,65 @@ bool is_valid_program(
                                 break;
                             }
                             }
-                            delete_leaf(leaf);
                         }
-                        value.init(get_value(result_leaf),0);
-                        delete_leaf(result_leaf);
+                        dec(result_leaf);
+                        std::string final_result;
+                        for (int i = highest-1; i >= 0; i--)
+                        {
+                            std::vector<Leaf*> new_leaves;
+                            for (size_t j = 0; j < leaves.size(); j++)
+                            {
+                                Leaf& leaf = *leaves[j];
+                                if(get_scope(leaf) == i)
+                                    new_leaves.push_back(&leaf);
+                            }
+                            Leaf& result_leaf = *new_leaves[0];
+                            for (size_t j = 1; j < new_leaves.size(); j++)
+                            {
+                                Leaf& leaf = *new_leaves[j];
+                                switch (get_type(leaf))
+                                {
+                                case cstate::SIGN1:
+                                case cstate::SIGN2:
+                                case cstate::SIGN3:
+                                case cstate::SIGNN:
+                                {
+                                    sign = get_value(leaf)[0];
+                                    break;
+                                }
+                                
+                                default:
+                                {
+
+                                    switch (sign)
+                                    {
+                                    case '+':
+                                        add(result_leaf,leaf);
+                                        break;
+                                    case '-':
+                                        sub(result_leaf,leaf);
+                                        break;
+                                    case '*':
+                                        mul(result_leaf,leaf);
+                                        break;
+                                    case '/':
+                                        div(result_leaf,leaf);
+                                        break;
+                                    
+                                    default:
+                                        break;
+                                    }
+                                    break;
+                                }
+                                }
+                            }
+                            
+                            final_result = get_value(result_leaf);
+                        }
+                        
+                        value.init(final_result,0);
+                        for (size_t i = 0; i < leaves.size(); i++)
+                            delete_leaf(*leaves[i]);
                         leaves.clear();
                         terms.push_back(value);
                         value.init(0,0);
@@ -675,6 +757,30 @@ bool is_valid_program(
                     {
                         Leaf& leaf = create_leaf();
                         set(leaf, feedi.first,feedi.second, scope);
+                        switch (feedi.first[0])
+                        {
+                        case '*':
+                        case '/':
+                        {
+                            if(muldiv == false)
+                                inc(leaf);
+                            inc(*leaves.back());
+                            muldiv = true;
+                            break;
+                        }
+                        case '+':
+                        case '-':
+                        {
+                            if(muldiv == true)
+                            {
+                                inc(*leaves.back());
+                                muldiv = false;
+                            }
+                            break;
+                        }
+                        default:
+                            break;
+                        }
                         leaves.push_back(&leaf);
                         state = end;
                         stop = true;
@@ -697,8 +803,13 @@ bool is_valid_program(
                 }
                 case pattern::SIGNPM:
                 {
+                    if (feedi.first == "-")
+                    {
+                        signm = true;
+                    }
                     if(feedi.first == "+" || feedi.first == "-")
                     {
+                        
                         state = end;
                         stop = true;
                     }

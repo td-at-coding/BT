@@ -38,6 +38,10 @@ bool mul(Leaf& lleaf, Leaf& rleaf);
 
 bool div(Leaf& lleaf, Leaf& rleaf);
 
+bool negate(Leaf& leaf);
 
+bool inc(Leaf& leaf);
 
+bool dec(Leaf& leaf);
 
+bool set_equal(Leaf& lleaf, Leaf& rleaf);
