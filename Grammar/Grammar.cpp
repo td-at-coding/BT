@@ -446,6 +446,10 @@ bool is_valid_pattern(
     }
 }
 
+
+#include "var_type.h"
+
+
 bool is_valid_program(
     const Grammar& grammar
     , const std::vector
@@ -463,6 +467,7 @@ bool is_valid_program(
     using pattern::pattern;
     using cstate::cstate;
     using scope_state::scope_state;
+    // using var_type::var_type;
     pattern state = pattern::BEGINNING;
     scope_state current_scope_state = scope_state::UNSPECIFIED;
     std::vector<unsigned> scopebegin, scopeend;
@@ -558,6 +563,43 @@ bool is_valid_program(
                         state = end;
                         if(assignment == false)
                             prev_keyword = feedi.first;
+                        if(s.contains_name(feedi.first))
+                        {
+                            var_type t;
+                            s.get_type(feedi.first, t);
+                            Leaf& leaf = create_leaf();
+                            switch (t)
+                            {
+                            case INTEGER:
+                            {
+                                int tmp;
+                                s.get_value(feedi.first, tmp);
+                                set(leaf, std::to_string(tmp), cstate::INTEGER, scope);
+                                leaves.push_back(&leaf);
+                                break;
+                            }
+                            
+                            case FLOAT:
+                            {
+                                float tmp;
+                                s.get_value(feedi.first, tmp);
+                                set(leaf, std::to_string(tmp), cstate::FLOAT, scope);
+                                leaves.push_back(&leaf);
+                                break;
+                            }
+                            case STRING:
+                            {
+                                std::string tmp;
+                                s.get_value(feedi.first, tmp);
+                                set(leaf, tmp, cstate::STRING, scope);
+                                leaves.push_back(&leaf);
+                                break;
+                            }
+                            default:
+                                break;
+                            }
+                        }
+
                         stop = true;
                         break;
                     }
