@@ -674,7 +674,6 @@ bool is_valid_program(
                                     if(negate_value == true)
                                     {
                                         negate(leaf);
-                                        // move(result_leaf, leaf);
                                         negate_value = false;
                                     }
                                     if (negate_once == true)
@@ -760,7 +759,6 @@ bool is_valid_program(
                                 if(negate_value == true)
                                 {
                                     negate(leaf);
-                                    // move(result_leaf, leaf);
                                     negate_value = false;
                                 } 
                                 if (negate_once == true)
