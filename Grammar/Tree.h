@@ -45,3 +45,5 @@ bool inc(Leaf& leaf);
 bool dec(Leaf& leaf);
 
 bool set_equal(Leaf& lleaf, Leaf& rleaf);
+
+bool move(Leaf& lleaf, Leaf& rleaf);

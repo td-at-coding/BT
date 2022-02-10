@@ -406,3 +406,10 @@ bool set_equal(Leaf& lleaf, Leaf& rleaf)
     lleaf.scope = rleaf.scope;
     return true;
 }
+
+bool move(Leaf& lleaf, Leaf& rleaf)
+{
+    lleaf = rleaf;
+
+    return true;
+}
