@@ -15,129 +15,129 @@ struct Grammar
 Grammar& create_grammar()
 {
     Grammar* temp = new Grammar;
-    using namespace pattern;
+    // using namespace pattern;
     // insert(temp->sm,BEGINNING,KEYWORD1);
-    insert(temp->sm,BEGINNING,KEYWORD2);
-    insert(temp->sm,BEGINNING,INTEGER);
-    insert(temp->sm,BEGINNING,STRING);
-    insert(temp->sm,BEGINNING,SIGNPM);
-    insert(temp->sm,BEGINNING,SCOPEBEGIN);
-    insert(temp->sm,BEGINNING,FSCOPEEND);
+    insert(temp->sm,pattern::BEGINNING,pattern::KEYWORD2);
+    insert(temp->sm,pattern::BEGINNING,pattern::INTEGER);
+    insert(temp->sm,pattern::BEGINNING,pattern::STRING);
+    insert(temp->sm,pattern::BEGINNING,pattern::SIGNPM);
+    insert(temp->sm,pattern::BEGINNING,pattern::SCOPEBEGIN);
+    insert(temp->sm,pattern::BEGINNING,pattern::FSCOPEEND);
 
-    insert(temp->sm,SCOPEBEGIN,SCOPEBEGIN);
-    insert(temp->sm,SCOPEBEGIN,KEYWORD1);
-    insert(temp->sm,SCOPEBEGIN,INTEGER);
-    insert(temp->sm,SCOPEBEGIN,SIGNPM);
+    insert(temp->sm,pattern::SCOPEBEGIN,pattern::SCOPEBEGIN);
+    insert(temp->sm,pattern::SCOPEBEGIN,pattern::KEYWORD1);
+    insert(temp->sm,pattern::SCOPEBEGIN,pattern::INTEGER);
+    insert(temp->sm,pattern::SCOPEBEGIN,pattern::SIGNPM);
 
-    insert(temp->sm,SCOPEEND,END);
-    insert(temp->sm,SCOPEEND,SIGN);
-    insert(temp->sm,SCOPEEND,CALL2);
-    insert(temp->sm,SCOPEEND,COMMAC);
+    insert(temp->sm,pattern::SCOPEEND,pattern::END);
+    insert(temp->sm,pattern::SCOPEEND,pattern::SIGN);
+    insert(temp->sm,pattern::SCOPEEND,pattern::CALL2);
+    insert(temp->sm,pattern::SCOPEEND,pattern::COMMAC);
 
-    insert(temp->sm,SIGNPM,KEYWORD1);
-    insert(temp->sm,SIGNPM,INTEGER);
-    insert(temp->sm,SIGNPM,SCOPEBEGIN);
+    insert(temp->sm,pattern::SIGNPM,pattern::KEYWORD1);
+    insert(temp->sm,pattern::SIGNPM,pattern::INTEGER);
+    insert(temp->sm,pattern::SIGNPM,pattern::SCOPEBEGIN);
 
-    insert(temp->sm,SIGN,KEYWORD1);
-    insert(temp->sm,SIGN,INTEGER);
-    insert(temp->sm,SIGN,SIGNPM);
+    insert(temp->sm,pattern::SIGN,pattern::KEYWORD1);
+    insert(temp->sm,pattern::SIGN,pattern::INTEGER);
+    insert(temp->sm,pattern::SIGN,pattern::SIGNPM);
 
-    insert(temp->sm,SIGNE,FSCOPEBEGIN);
-    insert(temp->sm,SIGNE,SCOPEBEGIN);
-    insert(temp->sm,SIGNE,KEYWORD2);
-    insert(temp->sm,SIGNE,STRING);
-    insert(temp->sm,SIGNE,INTEGER);
-    insert(temp->sm,SIGNE,SIGNPM);
+    insert(temp->sm,pattern::SIGNE,pattern::FSCOPEBEGIN);
+    insert(temp->sm,pattern::SIGNE,pattern::SCOPEBEGIN);
+    insert(temp->sm,pattern::SIGNE,pattern::KEYWORD2);
+    insert(temp->sm,pattern::SIGNE,pattern::STRING);
+    insert(temp->sm,pattern::SIGNE,pattern::INTEGER);
+    insert(temp->sm,pattern::SIGNE,pattern::SIGNPM);
 
-    insert(temp->sm,FSCOPEBEGIN,ARGBEGIN);
+    insert(temp->sm,pattern::FSCOPEBEGIN,pattern::ARGBEGIN);
 
-    insert(temp->sm,FSCOPEEND,STRING);
-    insert(temp->sm,FSCOPEEND,INTEGER);
-    insert(temp->sm,FSCOPEEND,KEYWORD5);
-    insert(temp->sm,FSCOPEEND,SCOPEBEGIN);
-    insert(temp->sm,FSCOPEEND,END);
-    insert(temp->sm,FSCOPEEND,SIGNPM);
+    insert(temp->sm,pattern::FSCOPEEND,pattern::STRING);
+    insert(temp->sm,pattern::FSCOPEEND,pattern::INTEGER);
+    insert(temp->sm,pattern::FSCOPEEND,pattern::KEYWORD5);
+    insert(temp->sm,pattern::FSCOPEEND,pattern::SCOPEBEGIN);
+    insert(temp->sm,pattern::FSCOPEEND,pattern::END);
+    insert(temp->sm,pattern::FSCOPEEND,pattern::SIGNPM);
 
-    insert(temp->sm,STRING,END);
-    insert(temp->sm,STRING,SIGNP2);
-    insert(temp->sm,STRING,CALL2);
-    insert(temp->sm,STRING,COMMAC);
+    insert(temp->sm,pattern::STRING,pattern::END);
+    insert(temp->sm,pattern::STRING,pattern::SIGNP2);
+    insert(temp->sm,pattern::STRING,pattern::CALL2);
+    insert(temp->sm,pattern::STRING,pattern::COMMAC);
 
-    insert(temp->sm,KEYWORD1,END);
-    insert(temp->sm,KEYWORD1,SIGN);
-    insert(temp->sm,KEYWORD1,SCOPEEND);
-    insert(temp->sm,KEYWORD1,CALL1);
+    insert(temp->sm,pattern::KEYWORD1,pattern::END);
+    insert(temp->sm,pattern::KEYWORD1,pattern::SIGN);
+    insert(temp->sm,pattern::KEYWORD1,pattern::SCOPEEND);
+    insert(temp->sm,pattern::KEYWORD1,pattern::CALL1);
 
-    insert(temp->sm,KEYWORD2,END);
-    insert(temp->sm,KEYWORD2,SIGNE);
-    insert(temp->sm,KEYWORD2,SIGNP1);
-    insert(temp->sm,KEYWORD2,SIGN);
-    insert(temp->sm,KEYWORD2,CALL1);
+    insert(temp->sm,pattern::KEYWORD2,pattern::END);
+    insert(temp->sm,pattern::KEYWORD2,pattern::SIGNE);
+    insert(temp->sm,pattern::KEYWORD2,pattern::SIGNP1);
+    insert(temp->sm,pattern::KEYWORD2,pattern::SIGN);
+    insert(temp->sm,pattern::KEYWORD2,pattern::CALL1);
 
-    insert(temp->sm,KEYWORD3,END);
-    insert(temp->sm,KEYWORD3,SIGNP2);
-    insert(temp->sm,KEYWORD3,CALL2);
-    insert(temp->sm,KEYWORD3,CALL1);
-    insert(temp->sm,KEYWORD3,COMMAC);
+    insert(temp->sm,pattern::KEYWORD3,pattern::END);
+    insert(temp->sm,pattern::KEYWORD3,pattern::SIGNP2);
+    insert(temp->sm,pattern::KEYWORD3,pattern::CALL2);
+    insert(temp->sm,pattern::KEYWORD3,pattern::CALL1);
+    insert(temp->sm,pattern::KEYWORD3,pattern::COMMAC);
     
-    insert(temp->sm,KEYWORD4,COMMA);
-    insert(temp->sm,KEYWORD4,ARGEND);
+    insert(temp->sm,pattern::KEYWORD4,pattern::COMMA);
+    insert(temp->sm,pattern::KEYWORD4,pattern::ARGEND);
 
-    insert(temp->sm,KEYWORD5,END);
-    insert(temp->sm,KEYWORD5,SIGNP3);
-    insert(temp->sm,KEYWORD5,SIGN);
-    insert(temp->sm,KEYWORD5,CALL1);
-    insert(temp->sm,KEYWORD5,CALL2);
+    insert(temp->sm,pattern::KEYWORD5,pattern::END);
+    insert(temp->sm,pattern::KEYWORD5,pattern::SIGNP3);
+    insert(temp->sm,pattern::KEYWORD5,pattern::SIGN);
+    insert(temp->sm,pattern::KEYWORD5,pattern::CALL1);
+    insert(temp->sm,pattern::KEYWORD5,pattern::CALL2);
 
-    insert(temp->sm,ARGBEGIN,ARGEND);
-    insert(temp->sm,ARGBEGIN,KEYWORD4);
+    insert(temp->sm,pattern::ARGBEGIN,pattern::ARGEND);
+    insert(temp->sm,pattern::ARGBEGIN,pattern::KEYWORD4);
 
-    insert(temp->sm,ARGEND,KEYWORD1);
-    insert(temp->sm,ARGEND,STRING);
-    insert(temp->sm,ARGEND,INTEGER);
-    insert(temp->sm,ARGEND,FSCOPEEND);
+    insert(temp->sm,pattern::ARGEND,pattern::KEYWORD1);
+    insert(temp->sm,pattern::ARGEND,pattern::STRING);
+    insert(temp->sm,pattern::ARGEND,pattern::INTEGER);
+    insert(temp->sm,pattern::ARGEND,pattern::FSCOPEEND);
 
-    insert(temp->sm,COMMA,KEYWORD4);
+    insert(temp->sm,pattern::COMMA,pattern::KEYWORD4);
 
-    insert(temp->sm,INTEGER,END);
-    insert(temp->sm,INTEGER,SIGN);
-    insert(temp->sm,INTEGER,SCOPEEND);
-    insert(temp->sm,INTEGER,CALL2);
-    insert(temp->sm,INTEGER,COMMAC);
+    insert(temp->sm,pattern::INTEGER,pattern::END);
+    insert(temp->sm,pattern::INTEGER,pattern::SIGN);
+    insert(temp->sm,pattern::INTEGER,pattern::SCOPEEND);
+    insert(temp->sm,pattern::INTEGER,pattern::CALL2);
+    insert(temp->sm,pattern::INTEGER,pattern::COMMAC);
 
-    insert(temp->sm,SIGNP1,STRING);
-    insert(temp->sm,SIGNP1,INTEGER);
-    insert(temp->sm,SIGNP1,KEYWORD5);
-    insert(temp->sm,SIGNP1,SCOPEBEGIN);
-    insert(temp->sm,SIGNP1,SIGNPM);
+    insert(temp->sm,pattern::SIGNP1,pattern::STRING);
+    insert(temp->sm,pattern::SIGNP1,pattern::INTEGER);
+    insert(temp->sm,pattern::SIGNP1,pattern::KEYWORD5);
+    insert(temp->sm,pattern::SIGNP1,pattern::SCOPEBEGIN);
+    insert(temp->sm,pattern::SIGNP1,pattern::SIGNPM);
     
-    insert(temp->sm,SIGNP2,STRING);
-    insert(temp->sm,SIGNP2,KEYWORD3);
+    insert(temp->sm,pattern::SIGNP2,pattern::STRING);
+    insert(temp->sm,pattern::SIGNP2,pattern::KEYWORD3);
 
-    insert(temp->sm,SIGNP3,STRING);
-    insert(temp->sm,SIGNP3,INTEGER);
-    insert(temp->sm,SIGNP3,SCOPEBEGIN);
-    insert(temp->sm,SIGNP3,KEYWORD5);
-    insert(temp->sm,SIGNP3,SIGNPM);
+    insert(temp->sm,pattern::SIGNP3,pattern::STRING);
+    insert(temp->sm,pattern::SIGNP3,pattern::INTEGER);
+    insert(temp->sm,pattern::SIGNP3,pattern::SCOPEBEGIN);
+    insert(temp->sm,pattern::SIGNP3,pattern::KEYWORD5);
+    insert(temp->sm,pattern::SIGNP3,pattern::SIGNPM);
 
-    insert(temp->sm,CALL1,CALL2);
-    insert(temp->sm,CALL1,STRING);
-    insert(temp->sm,CALL1,INTEGER);
-    insert(temp->sm,CALL1,SCOPEBEGIN);
-    insert(temp->sm,CALL1,SIGNPM);
-    insert(temp->sm,CALL1,KEYWORD5);
+    insert(temp->sm,pattern::CALL1,pattern::CALL2);
+    insert(temp->sm,pattern::CALL1,pattern::STRING);
+    insert(temp->sm,pattern::CALL1,pattern::INTEGER);
+    insert(temp->sm,pattern::CALL1,pattern::SCOPEBEGIN);
+    insert(temp->sm,pattern::CALL1,pattern::SIGNPM);
+    insert(temp->sm,pattern::CALL1,pattern::KEYWORD5);
 
-    insert(temp->sm,COMMAC,STRING);
-    insert(temp->sm,COMMAC,INTEGER);
-    insert(temp->sm,COMMAC,SCOPEBEGIN);
-    insert(temp->sm,COMMAC,SIGNPM);
-    insert(temp->sm,COMMAC,KEYWORD5);
+    insert(temp->sm,pattern::COMMAC,pattern::STRING);
+    insert(temp->sm,pattern::COMMAC,pattern::INTEGER);
+    insert(temp->sm,pattern::COMMAC,pattern::SCOPEBEGIN);
+    insert(temp->sm,pattern::COMMAC,pattern::SIGNPM);
+    insert(temp->sm,pattern::COMMAC,pattern::KEYWORD5);
 
-    insert(temp->sm,CALL2,END);
-    insert(temp->sm,CALL2,SIGNP3);
-    insert(temp->sm,CALL2,SIGN);
-    insert(temp->sm,CALL2,CALL2);
-    insert(temp->sm,CALL2,SCOPEEND);
+    insert(temp->sm,pattern::CALL2,pattern::END);
+    insert(temp->sm,pattern::CALL2,pattern::SIGNP3);
+    insert(temp->sm,pattern::CALL2,pattern::SIGN);
+    insert(temp->sm,pattern::CALL2,pattern::CALL2);
+    insert(temp->sm,pattern::CALL2,pattern::SCOPEEND);
 
     return *temp;
 }
@@ -479,6 +479,7 @@ bool is_valid_program(
     std::string prev_keyword = "";
     std::vector<Leaf*> leaves;
     bool muldiv = false;
+    bool name_contained = false;
 
     for (size_t i = 0; i < feed.size(); i++)
     {
@@ -561,9 +562,12 @@ bool is_valid_program(
                     case pattern::KEYWORD5:
                     {
                         state = end;
+                        // assignment has been set yet
+                        // only first time
                         if(assignment == false)
                             prev_keyword = feedi.first;
-                        if(s.contains_name(feedi.first))
+                        name_contained = s.contains_name(feedi.first);
+                        if(name_contained)
                         {
                             var_type t;
                             s.get_type(feedi.first, t);
@@ -650,6 +654,11 @@ bool is_valid_program(
                     if(feedi.first == ";")
                     {
                         state = end;
+                        if (assignment == true && name_contained == true)
+                        {
+                            leaves.erase(leaves.begin() );
+                        }
+                        
                         if(muldiv == true)
                         {
                             inc(*leaves.back());
@@ -836,7 +845,31 @@ bool is_valid_program(
                             }
                             }
                         }
-                        
+                        std::string result = get_value(result_leaf);
+                        if( assignment == true)
+                        {
+                            var_type t;
+                            cstate type_leaf = get_type(result_leaf);
+                            switch (type_leaf)
+                            {
+                            case cstate::INTEGER:
+                                t = INTEGER;
+                                break;
+                            case cstate::FLOAT:
+                                t = FLOAT;
+                                break;
+                            case cstate::STRING:
+                                t = STRING;
+                                break;
+                            
+                            default:
+                                break;
+                            }
+                            if (name_contained)
+                                s.set_value(prev_keyword,result, t);
+                            else
+                                s.insert_data(prev_keyword,result, t);
+                        }
                         value.init(get_value(result_leaf),0);
                         for (size_t i = 0; i < leaves.size(); i++)
                             delete_leaf(*leaves[i]);
@@ -1008,10 +1041,10 @@ bool is_valid_program(
     
     if(state == pattern::END)
     {
-        s = _s;
         return true;
     } else 
     {
+        s = _s;
         return false;
     }
 }
