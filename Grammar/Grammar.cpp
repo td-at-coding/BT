@@ -565,9 +565,11 @@ bool is_valid_program(
                         // assignment has been set yet
                         // only first time
                         if(assignment == false)
+                        {
                             prev_keyword = feedi.first;
-                        name_contained = s.contains_name(feedi.first);
-                        if(name_contained)
+                            name_contained = s.contains_name(feedi.first);
+                        }
+                        if(s.contains_name(feedi.first))
                         {
                             var_type t;
                             s.get_type(feedi.first, t);
@@ -657,6 +659,7 @@ bool is_valid_program(
                         if (assignment == true && name_contained == true)
                         {
                             leaves.erase(leaves.begin() );
+
                         }
                         
                         if(muldiv == true)
@@ -869,6 +872,8 @@ bool is_valid_program(
                                 s.set_value(prev_keyword,result, t);
                             else
                                 s.insert_data(prev_keyword,result, t);
+                            name_contained = false;
+                            assignment = false;
                         }
                         value.init(get_value(result_leaf),0);
                         for (size_t i = 0; i < leaves.size(); i++)
