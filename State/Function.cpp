@@ -139,11 +139,12 @@ bool Function::evaluate(std::vector<Data> args, const State& state, Term& value)
         else
             total+= std::stoi(ret_expr);
         value.init("",total,0);
+    } else if (return_expression != arguments[0].get_name()) 
+        value.init("",return_expression,0);
 
-    } else if( return_expression == arguments[0].get_name() && arguments.size() == 1)
-    {
+    if( return_expression == arguments[0].get_name() && arguments.size() == 1)
         value.init("",arguments[0].get_value(),0);
-    } else value.init("",return_expression,0);
+    
 
     return true;
 }

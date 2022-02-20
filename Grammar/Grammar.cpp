@@ -480,6 +480,9 @@ bool is_valid_program(
     std::vector<Leaf*> leaves;
     bool muldiv = false;
     bool name_contained = false;
+    bool fcall = false;
+    std::vector<Leaf*> fleaves;
+    std::string fname = "";
 
     for (size_t i = 0; i < feed.size(); i++)
     {
@@ -564,45 +567,53 @@ bool is_valid_program(
                         state = end;
                         // assignment has been set yet
                         // only first time
-                        if(assignment == false)
+                        if(s.contains_function(feedi.first))
                         {
-                            prev_keyword = feedi.first;
-                            name_contained = s.contains_name(feedi.first);
-                        }
-                        if(s.contains_name(feedi.first))
+                            fcall = true;
+                            fname = feedi.first;
+                        } else 
                         {
-                            var_type t;
-                            s.get_type(feedi.first, t);
-                            Leaf& leaf = create_leaf();
-                            switch (t)
+
+                            if(assignment == false)
                             {
-                            case INTEGER:
-                            {
-                                int tmp;
-                                s.get_value(feedi.first, tmp);
-                                set(leaf, std::to_string(tmp), cstate::INTEGER, scope);
-                                leaves.push_back(&leaf);
-                                break;
+                                prev_keyword = feedi.first;
+                                name_contained = s.contains_name(feedi.first);
                             }
-                            
-                            case FLOAT:
+                            if(s.contains_name(feedi.first))
                             {
-                                float tmp;
-                                s.get_value(feedi.first, tmp);
-                                set(leaf, std::to_string(tmp), cstate::FLOAT, scope);
-                                leaves.push_back(&leaf);
-                                break;
-                            }
-                            case STRING:
-                            {
-                                std::string tmp;
-                                s.get_value(feedi.first, tmp);
-                                set(leaf, tmp, cstate::STRING, scope);
-                                leaves.push_back(&leaf);
-                                break;
-                            }
-                            default:
-                                break;
+                                var_type t;
+                                s.get_type(feedi.first, t);
+                                Leaf& leaf = create_leaf();
+                                switch (t)
+                                {
+                                case INTEGER:
+                                {
+                                    int tmp;
+                                    s.get_value(feedi.first, tmp);
+                                    set(leaf, std::to_string(tmp), cstate::INTEGER, scope);
+                                    leaves.push_back(&leaf);
+                                    break;
+                                }
+                                
+                                case FLOAT:
+                                {
+                                    float tmp;
+                                    s.get_value(feedi.first, tmp);
+                                    set(leaf, std::to_string(tmp), cstate::FLOAT, scope);
+                                    leaves.push_back(&leaf);
+                                    break;
+                                }
+                                case STRING:
+                                {
+                                    std::string tmp;
+                                    s.get_value(feedi.first, tmp);
+                                    set(leaf, tmp, cstate::STRING, scope);
+                                    leaves.push_back(&leaf);
+                                    break;
+                                }
+                                default:
+                                    break;
+                                }
                             }
                         }
 
@@ -623,7 +634,14 @@ bool is_valid_program(
                         return false;
                     Leaf& leaf = create_leaf();
                     set(leaf, feedi.first,feedi.second, scope);
-                    leaves.push_back(&leaf);
+                    if(fcall == true)
+                    {
+                        fleaves.push_back(&leaf);
+                    }
+                    else
+                    {
+                        leaves.push_back(&leaf);
+                    }
                     state = end;
                     stop = true;
                 }
@@ -638,7 +656,14 @@ bool is_valid_program(
                         return false;
                     Leaf& leaf = create_leaf();
                     set(leaf, feedi.first,feedi.second, scope);
-                    leaves.push_back(&leaf);
+                    if(fcall == true)
+                    {
+                        fleaves.push_back(&leaf);
+                    }
+                    else
+                    {
+                        leaves.push_back(&leaf);
+                    }
                     state = end;
                     stop = true;
                 }
@@ -979,6 +1004,76 @@ bool is_valid_program(
                         {
                             pattern last =prescope.back();
                             prescope.pop_back();
+                            Function function;
+                            s.get_function(fname, function);
+                            std::vector<Data> args;
+                            for (size_t i = 0; i < fleaves.size(); i++)
+                            {
+                                Leaf& leaf = *fleaves[i];
+                                switch (get_type(leaf))
+                                {
+                                case cstate::INTEGER:
+                                {
+                                    Data data(get_value(leaf),INTEGER);
+                                    args.push_back(data);
+                                    break;
+                                }
+                                case cstate::FLOAT:
+                                {
+                                    Data data(get_value(leaf),FLOAT);
+                                    args.push_back(data);
+                                    break;
+                                }
+                                case cstate::STRING:
+                                {
+                                    Data data(get_value(leaf),STRING);
+                                    args.push_back(data);
+                                    break;
+                                }
+
+                                default:
+                                    break;
+                                }
+                            }
+                            Term term;
+                            function.evaluate(args,s,term);
+                            var_type t;
+                            term.get_type(t);
+                            switch (t)
+                            {
+                            case INTEGER:
+                            {
+                                int n;
+                                term.get_value(n);
+                                Leaf& leaf = create_leaf();
+                                set(leaf,std::to_string(n),cstate::INTEGER,scope);
+                                leaves.push_back(&leaf);
+                                break;
+                            }
+                            case FLOAT:
+                            {
+                                float n;
+                                term.get_value(n);
+                                Leaf& leaf = create_leaf();
+                                set(leaf,std::to_string(n),cstate::FLOAT,scope);
+                                leaves.push_back(&leaf);
+                                break;
+                            }
+                            case STRING:
+                            {
+                                std::string n;
+                                term.get_value(n);
+                                Leaf& leaf = create_leaf();
+                                set(leaf,n,cstate::STRING,scope);
+                                leaves.push_back(&leaf);
+                                break;
+                            }
+                            default:
+                                break;
+                            }
+
+                            fcall = false;
+                            fleaves.clear();
                             switch (last)
                             {
                             case pattern::KEYWORD2:
